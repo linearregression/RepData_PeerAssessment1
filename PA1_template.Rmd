@@ -1,10 +1,14 @@
 # Reproducible Research: Peer Assessment 1
 For background of project, please refer to [README.md](https://github.com/linearregression/RepData_PeerAssessment1/blob/master/README.md)
 
-## Unzip locally
+## Download data and unzip locally
 ```r
+zipData <- './activity.zip'
+if(!file.exists("./activity.zip")) {
+   download.file(url='https://github.com/linearregression/RepData_PeerAssessment1/blob/master/activity.zip?raw=true', destfile=zipData, method='curl')
+}
 if(!file.exists("./activity.csv")) {
-   unzip(zipfile='activity.zip', overwrite=TRUE)
+   unzip(zipfile=zipData, overwrite=TRUE)
 }
 ```
 ## Loading and preprocessing the data
