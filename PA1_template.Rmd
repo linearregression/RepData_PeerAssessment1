@@ -1,3 +1,10 @@
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
+
 # Reproducible Research: Peer Assessment 1
 For background of project, please refer to [README.md](https://github.com/linearregression/RepData_PeerAssessment1/blob/master/README.md)
 
@@ -5,26 +12,54 @@ For background of project, please refer to [README.md](https://github.com/linear
 ```r
 zipData <- './activity.zip'
 if(!file.exists("./activity.zip")) {
-   download.file(url='https://github.com/linearregression/RepData_PeerAssessment1/blob/master/activity.zip?raw=true', destfile=zipData, method='curl')
+   print('Downloading activity.zip ....')   
+   download.file(url='https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip', destfile=zipData, method='curl')
 }
 if(!file.exists("./activity.csv")) {
+   print('Unzip activity.zip ....')  
    unzip(zipfile=zipData, overwrite=TRUE)
 }
 ```
 ## Loading and preprocessing the data
+Load data from csv
+```r
 
+fitdata<- read.csv(file='activity.csv',header=TRUE,stringsAsFactor=FALSE, na.strings = "NA")
 
-
+```
 ## What is mean total number of steps taken per day?
+Group steps by date, then calculate mean number of steps.
+Missing data is thrown away.
+``` r {r ggplot2lot, fig.width=4, fig.eight=3, message=FALSE, echo=TRUE}
+library(plyr)
+library(dplyr)
+library(ggplot2)
+fitdata <-na.omit(fitdata)
+sumfitdata <- fitdata %>%
+   group_by(date) %>%
+   summarise(sum = sum(steps)) 
 
-
+ggplot()
+```
 
 ## What is the average daily activity pattern?
 
+``` r
 
-
+```
 ## Imputing missing values
 
+```r 
+totalNA <- sum(!complete.cases(fitdata))
 
-
+```
+Number of missing data: 
+``` r
+totalNA
+```
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```r
+
+```
+
