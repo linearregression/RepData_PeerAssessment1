@@ -41,6 +41,9 @@ sumfitdata <- fitdata %>%
 
 ggplot()
 ```
+ - Mean nubmer of steps taken per day:
+
+ - Median number of steps taken per day:
 
 ## What is the average daily activity pattern?
 
@@ -49,12 +52,12 @@ ggplot()
 ```
 ## Imputing missing values
 
-```r 
+``` {r totalNA, echo=TRUE} 
 totalNA <- sum(!complete.cases(fitdata))
 
 ```
 Number of missing data: 
-``` r
+``` r {echo=FALSE}
 totalNA
 ```
 ## Are there differences in activity patterns between weekdays and weekends?
