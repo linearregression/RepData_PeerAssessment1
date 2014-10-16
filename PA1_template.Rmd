@@ -58,6 +58,9 @@ median(sumfitdata$stepssum)
 ## What is the average daily activity pattern?
 
 ``` {r dailyactvity, echo=TRUE}
+library(plyr)
+library(dplyr)
+library(ggplot2)
 png('figure/stepdaily.png', 480, 480)
 activitydata <- ddply(fitdata,c('interval'), summarise, 
      mean=mean(steps),
@@ -66,7 +69,7 @@ p <- ggplot(data = activitydata, mapping = aes(x=interval, y=mean)) +
      xlab('Interval (min)') +
      ylab('Average Steps') +
      ggtitle('Daily Activity Pattern') 
-p <- p+layer(geom="line", stat="identity")
+p <- p+layer(geom="line", stat="identity", geom_params = list(color='red'))
 print(p)
 dev.off()
 
