@@ -49,13 +49,13 @@ mean(sumfitdata$stepssum)
  - Median number of steps taken per day:
 
 ``` r
-
+median(sumfitdata$stepssum)
 ```
 
 ## What is the average daily activity pattern?
 
 ``` r
-median(sumfitdata$stepssum)
+
 ```
 ## Imputing missing values
 
