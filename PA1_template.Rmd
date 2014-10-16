@@ -37,8 +37,11 @@ library(ggplot2)
 fitdata <-na.omit(fitdata)
 sumfitdata <- ddply(fitdata,~date, summarise, stepssum=sum(steps)) 
 png('figure/stepsum.png', 480, 480)
-p <- ggplot(data = sumfitdata, mapping = aes(x=date, y=stepssum))
-p2<- p +layer(geom = 'bar', geom_params = list(fill='green',color = 'steelblue'), stat = 'identity', stat_params = list(binwidth=0.5))
+p <- ggplot(data = sumfitdata, mapping = aes(x=date, y=stepssum)) +
+     xlab('Date') +
+     ylab('Total Steps') +
+     ggtitle('Total Number Steps per Date')
+p2 <- p +layer(geom = 'bar', geom_params = list(fill='green',color = 'steelblue'), stat = 'identity', stat_params = list(binwidth=0.5))
 print(p2)
 dev.off()
 ```
