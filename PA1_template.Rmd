@@ -9,7 +9,7 @@ output:
 For background of project, please refer to [README.md](https://github.com/linearregression/RepData_PeerAssessment1/blob/master/README.md)
 
 ## Download data and unzip locally
-```r
+```{r download, echo=TRUE}
 zipData <- './activity.zip'
 if(!file.exists("./activity.zip")) {
    print('Downloading activity.zip ....')   
@@ -22,7 +22,7 @@ if(!file.exists("./activity.csv")) {
 ```
 ## Loading and preprocessing the data
 Load data from csv
-```r
+```{r loaddata, echo=TRUE}
 Sys.setlocale(locale = "C")
 fitdata<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
 
@@ -30,7 +30,7 @@ fitdata<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.s
 ## What is mean total number of steps taken per day?
 Group steps by date, then calculate mean number of steps.
 Missing data is thrown away.
-``` r {r ggplot2lot, fig.width=4, fig.eight=3, message=FALSE, echo=TRUE}
+``` {r ggplot2lot, fig.width=4, fig.eight=3, message=FALSE, echo=TRUE}
 library(plyr)
 library(dplyr)
 library(ggplot2)
@@ -57,19 +57,28 @@ median(sumfitdata$stepssum)
 
 ## What is the average daily activity pattern?
 
-``` r
+``` {r dailyactvity, echo=TRUE}
+png('figure/stepdaily.png', 480, 480)
+activitydata <- ddply(fitdata,c('interval'), summarise, 
+     mean=mean(steps),
+     sd = sd(steps)) 
+p <- ggplot(data = activitydata, mapping = aes(x=interval, y=mean)) +
+     xlab('Interval (min)') +
+     ylab('Average Steps') +
+     ggtitle('Daily Activity Pattern') 
+p <- p+layer(geom="line", stat="identity")
+print(p)
+dev.off()
 
 ```
 ## Imputing missing values
 
-``` {r totalNA, echo=TRUE} 
-totalNA <- sum(!complete.cases(fitdata))
+Total number of missing data:
 
+``` {r totalNA, echo=TRUE} 
+sum(!complete.cases(fitdata))
 ```
-Number of missing data: 
-``` r {echo=FALSE}
-totalNA
-```
+
 ## Are there differences in activity patterns between weekdays and weekends?
 
 ```r
