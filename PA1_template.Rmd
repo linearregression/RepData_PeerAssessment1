@@ -23,8 +23,8 @@ if(!file.exists("./activity.csv")) {
 ## Loading and preprocessing the data
 Load data from csv
 ```r
-
-fitdata<- read.csv(file='activity.csv',header=TRUE,stringsAsFactor=FALSE, na.strings = "NA")
+Sys.setlocale(locale = "C")
+fitdata<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
 
 ```
 ## What is mean total number of steps taken per day?
@@ -35,11 +35,12 @@ library(plyr)
 library(dplyr)
 library(ggplot2)
 fitdata <-na.omit(fitdata)
-sumfitdata <- fitdata %>%
-   group_by(date) %>%
-   summarise(sum = sum(steps)) 
-
-ggplot()
+sumfitdata <- ddply(fitdata,~date, summarise, stepssum=sum(steps)) 
+png('figure/stepsum.png', 480, 480)
+p <- ggplot(data = sumfitdata, mapping = aes(x=date, y=stepssum))
+p2<- p +layer(geom = 'bar', geom_params = list(fill='green',color = 'steelblue'), stat = 'identity', stat_params = list(binwidth=0.5))
+print(p2)
+dev.off()
 ```
  - Mean nubmer of steps taken per day:
 
