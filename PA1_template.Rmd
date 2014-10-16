@@ -43,13 +43,19 @@ print(p2)
 dev.off()
 ```
  - Mean nubmer of steps taken per day:
-
+``` r
+mean(sumfitdata$stepssum)
+```   
  - Median number of steps taken per day:
+
+``` r
+
+```
 
 ## What is the average daily activity pattern?
 
 ``` r
-
+median(sumfitdata$stepssum)
 ```
 ## Imputing missing values
 
