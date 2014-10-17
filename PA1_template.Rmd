@@ -55,7 +55,12 @@ mean(sumfitdata$stepssum)
 median(sumfitdata$stepssum)
 ```
 
-## What is the average daily activity pattern?
+## What is the average daily activity pattern
+
+Mean number of steps per group by intervals across all days are calculated.
+Maximum value of such is also calculated. 
+
+Following is a frequency distribution of Mean number steps per 5 min interval:
 
 ``` {r dailyactvity, echo=TRUE}
 library(plyr)
@@ -63,8 +68,7 @@ library(dplyr)
 library(ggplot2)
 png('figure/stepdaily.png', 480, 480)
 activitydata <- ddply(fitdata,c('interval'), summarise, 
-     mean=mean(steps),
-     sd = sd(steps)) 
+     mean=mean(steps)) 
 p <- ggplot(data = activitydata, mapping = aes(x=interval, y=mean)) +
      xlab('Interval (min)') +
      ylab('Average Steps') +
@@ -74,6 +78,15 @@ print(p)
 dev.off()
 
 ```
+On average, maximum mean number of steps occurs at:
+
+``` {r, echo=TRUE}
+# Find index on interval axis has the max mean number of steps
+index <- which.max(activitydata$mean)
+activitydata$interval[index]
+
+```
+
 ## Imputing missing values
 
 Total number of missing data:
