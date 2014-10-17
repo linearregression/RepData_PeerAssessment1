@@ -25,19 +25,33 @@ if(!file.exists("./activity.csv")) {
 Load data from csv
 
 ```r
-Sys.setlocale(locale = "C")
+Sys.setlocale("LC_TIME", "English")
 ```
 
 ```
-## [1] "LC_CTYPE=C;LC_NUMERIC=C;LC_TIME=C;LC_COLLATE=C;LC_MONETARY=C;LC_MESSAGES=en_US.UTF-8;LC_PAPER=en_US.UTF-8;LC_NAME=C;LC_ADDRESS=C;LC_TELEPHONE=C;LC_MEASUREMENT=en_US.UTF-8;LC_IDENTIFICATION=C"
+## Warning: OS reports request to set locale to "English" cannot be honored
+```
+
+```
+## [1] ""
 ```
 
 ```r
 fitdata<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
 ```
 ## What is mean total number of steps taken per day?
-Group steps by date, then calculate mean number of steps.
-Missing data is thrown away.
+
+Frequency distribution of daily total of steps taken. Missing data dropped.
+
+
+```r
+stepsFreq <- aggregate(fitdata$steps, by=list(fitdata$date), sum, na.rm=TRUE)
+colnames(stepsFreq) <- c('date','sum')
+hist(stepsFreq$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps', col='cyan')
+```
+
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1.png) 
+In additinal to the histogram above, group steps by date. Missing data dropped.
 
 ```r
 library(plyr)
@@ -97,17 +111,17 @@ print(p)
 ```
 
 ![plot of chunk dailyactvity](figure/dailyactvity.png) 
-On average, maximum mean number of steps occurs at:
+Interval where Max Mean happens and the corresponding max mean:
 
 
 ```r
 # Find index on interval axis has the max mean number of steps
-index <- which.max(activitydata$mean)
-activitydata$interval[index]
+activitydata[which.max(activitydata$mean),]
 ```
 
 ```
-## [1] 835
+##     interval  mean
+## 104      835 206.2
 ```
 
 ## Imputing missing values
@@ -122,10 +136,117 @@ sum(!complete.cases(fitdata))
 ```
 ## [1] 2304
 ```
+Replace missing values with mean number of steps taken, 
+then compare changes to previous calculated results.
+
+
+```r
+fitdata2<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
+nodata <- which(!complete.cases(fitdata2))
+fitdata2$steps[nodata] <- mean(sumfitdata$stepssum)
+stepsFreq <- aggregate(fitdata2$steps, by=list(fitdata2$date), sum, na.rm=TRUE)
+colnames(stepsFreq) <- c('date','sum')
+hist(stepsFreq$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps with Missing Value as Mean', col='cyan')
+```
+
+![plot of chunk meanReplacement](figure/meanReplacement.png) 
+
+```r
+mean(stepsFreq$sum)
+```
+
+```
+## [1] 362668
+```
+
+```r
+median(stepsFreq$sum)
+```
+
+```
+## [1] 11458
+```
+Effect no much difference.
+
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```r
 
+```r
+library(lubridate)
+Sys.setlocale("LC_TIME", "English")
+```
+
+```
+## Warning: OS reports request to set locale to "English" cannot be honored
+```
+
+```
+## [1] ""
+```
+
+```r
+fitdata<-na.omit(fitdata)
+#Index of rows with weekdays and weekendsrespectively
+fitdays <- weekdays(as.Date(fitdata$date))
+weekdays <- (fitdays == 'Saturday') | (fitdays == 'Sunday')
+weekends <- !weekdays
+
+weekdaydata <- ddply(weekdays,c('interval', 'date'), summarise, mean=mean(steps))
+```
+
+```
+## Error: missing value where TRUE/FALSE needed
+```
+
+```r
+weekenddata <- ddply(weekend,c('interval', 'date'), summarise, mean=mean(steps))
+```
+
+```
+## Error: object 'weekend' not found
+```
+
+```r
+data2.weekday <- data2[data2$weekday == "weekday", ]
+```
+
+```
+## Error: object 'data2' not found
+```
+
+```r
+data2.weekend <- data2[data2$weekday == "weekend", ]
+```
+
+```
+## Error: object 'data2' not found
+```
+
+```r
+par(mfrow=c(2,1))
+plot(x=timeHM_formatter(ActivityByInterval.weekday$Hour_Minute),
+     y=ActivityByInterval.weekday$Avg_Steps, 
+     type="l", 
+     main="Weekday Activities", 
+     xlab="5 Minute Daily Intervals", ylab="Mean Steps", 
+     ylim=c(0,250))
+```
+
+```
+## Error: could not find function "timeHM_formatter"
+```
+
+```r
+plot(x=timeHM_formatter(ActivityByInterval.weekend$Hour_Minute),
+     y=ActivityByInterval.weekend$Avg_Steps, 
+     type="l",
+     main="Weekend Activites", 
+     xlab="5 Minute Daily Intervals", ylab="Mean Steps",
+     ylim=c(0,250))
+```
+
+```
+## Error: could not find function "timeHM_formatter"
 ```
 

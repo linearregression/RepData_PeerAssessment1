@@ -36,10 +36,8 @@ stepsFreq <- aggregate(fitdata$steps, by=list(fitdata$date), sum, na.rm=TRUE)
 colnames(stepsFreq) <- c('date','sum')
 hist(stepsFreq$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps', col='cyan')
 
-
 ```
-
-An aside, group steps by date. Missing data dropped.
+In additinal to the histogram above, group steps by date. Missing data dropped.
 ``` {r stepsum, fig.width=4, fig.eight=3, message=FALSE, echo=TRUE, results='hide'}
 library(plyr)
 library(dplyr)
@@ -84,12 +82,11 @@ p <- p+layer(geom="line", stat="identity", geom_params = list(color='red'))
 print(p)
 
 ```
-On average, maximum mean number of steps occurs at:
+Interval where Max Mean happens and the corresponding max mean:
 
 ``` {r, echo=TRUE}
 # Find index on interval axis has the max mean number of steps
-index <- which.max(activitydata$mean)
-activitydata$interval[index]
+activitydata[which.max(activitydata$mean),]
 
 ```
 
@@ -100,17 +97,22 @@ Total number of missing data:
 ``` {r totalNA, echo=TRUE} 
 sum(!complete.cases(fitdata))
 ```
-Replace missing values with its corresponding interval mean number of steps taken, 
+Replace missing values with mean number of steps taken, 
 then compare changes to previous calculated results.
 
 ``` {r meanReplacement, echo = TRUE}
+fitdata2<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
+nodata <- which(!complete.cases(fitdata2))
+fitdata2$steps[nodata] <- mean(sumfitdata$stepssum)
+stepsFreq <- aggregate(fitdata2$steps, by=list(fitdata2$date), sum, na.rm=TRUE)
+colnames(stepsFreq) <- c('date','sum')
+hist(stepsFreq$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps with Missing Value as Mean', col='cyan')
 
-nodata <- complete.cases(fitdata)
-
-
+mean(stepsFreq$sum)
+median(stepsFreq$sum)
 
 ```
-
+Effect no much difference.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -127,6 +129,22 @@ weekends <- !weekdays
 weekdaydata <- ddply(weekdays,c('interval', 'date'), summarise, mean=mean(steps))
 weekenddata <- ddply(weekend,c('interval', 'date'), summarise, mean=mean(steps))
 
+data2.weekday <- data2[data2$weekday == "weekday", ]
+data2.weekend <- data2[data2$weekday == "weekend", ]
+
+par(mfrow=c(2,1))
+plot(x=timeHM_formatter(ActivityByInterval.weekday$Hour_Minute),
+     y=ActivityByInterval.weekday$Avg_Steps, 
+     type="l", 
+     main="Weekday Activities", 
+     xlab="5 Minute Daily Intervals", ylab="Mean Steps", 
+     ylim=c(0,250))
+plot(x=timeHM_formatter(ActivityByInterval.weekend$Hour_Minute),
+     y=ActivityByInterval.weekend$Avg_Steps, 
+     type="l",
+     main="Weekend Activites", 
+     xlab="5 Minute Daily Intervals", ylab="Mean Steps",
+     ylim=c(0,250))
 
 ```
 
