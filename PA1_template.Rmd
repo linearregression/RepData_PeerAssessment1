@@ -28,8 +28,18 @@ fitdata<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.s
 
 ```
 ## What is mean total number of steps taken per day?
-Group steps by date, then calculate mean number of steps.
-Missing data is thrown away.
+
+Frequency distribution of daily total of steps taken. Missing data dropped.
+
+``` {r, echo= TRUE}
+stepsFreq <- aggregate(fitdata$steps, by=list(fitdata$date), sum, na.rm=TRUE)
+colnames(stepsFreq) <- c('date','sum')
+hist(stepsFreq$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps', col='cyan')
+
+
+```
+
+An aside, group steps by date. Missing data dropped.
 ``` {r stepsum, fig.width=4, fig.eight=3, message=FALSE, echo=TRUE, results='hide'}
 library(plyr)
 library(dplyr)
