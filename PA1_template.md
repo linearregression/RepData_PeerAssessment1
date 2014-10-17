@@ -9,7 +9,8 @@ output:
 For background of project, please refer to [README.md](https://github.com/linearregression/RepData_PeerAssessment1/blob/master/README.md)
 
 ## Download data and unzip locally
-```{r download, echo=TRUE}
+
+```r
 zipData <- './activity.zip'
 if(!file.exists("./activity.zip")) {
    print('Downloading activity.zip ....')   
@@ -22,15 +23,23 @@ if(!file.exists("./activity.csv")) {
 ```
 ## Loading and preprocessing the data
 Load data from csv
-```{r loaddata, echo=TRUE}
-Sys.setlocale(locale = "C")
-fitdata<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
 
+```r
+Sys.setlocale(locale = "C")
+```
+
+```
+## [1] "LC_CTYPE=C;LC_NUMERIC=C;LC_TIME=C;LC_COLLATE=C;LC_MONETARY=C;LC_MESSAGES=en_US.UTF-8;LC_PAPER=en_US.UTF-8;LC_NAME=C;LC_ADDRESS=C;LC_TELEPHONE=C;LC_MEASUREMENT=en_US.UTF-8;LC_IDENTIFICATION=C"
+```
+
+```r
+fitdata<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
 ```
 ## What is mean total number of steps taken per day?
 Group steps by date, then calculate mean number of steps.
 Missing data is thrown away.
-``` {r stepsum, fig.width=4, fig.eight=3, message=FALSE, echo=TRUE, results='hide'}
+
+```r
 library(plyr)
 library(dplyr)
 library(ggplot2)
@@ -43,14 +52,26 @@ p <- ggplot(data = sumfitdata, mapping = aes(x=date, y=stepssum)) +
 p2 <- p +layer(geom = 'histogram', geom_params = list(fill='green',color = 'steelblue'), stat = 'identity', stat_params = list(binwidth=5))
 print(p2)
 ```
+
+![plot of chunk stepsum](figure/stepsum.png) 
  - Mean nubmer of steps taken per day:
-``` {r eval=T, echo=T}
+
+```r
 mean(sumfitdata$stepssum)
-```   
+```
+
+```
+## [1] 9354
+```
  - Median number of steps taken per day:
 
-``` {r eval=T, echo=T}
+
+```r
 median(sumfitdata$stepssum)
+```
+
+```
+## [1] 10395
 ```
 
 ## What is the average daily activity pattern
@@ -60,7 +81,8 @@ Maximum value of such is also calculated.
 
 Following is a frequency distribution of Mean number steps per 5 min interval:
 
-``` {r dailyactvity, echo=TRUE}
+
+```r
 library(plyr)
 library(dplyr)
 library(ggplot2)
@@ -72,40 +94,38 @@ p <- ggplot(data = activitydata, mapping = aes(x=interval, y=mean)) +
      ggtitle('Daily Activity Pattern') 
 p <- p+layer(geom="line", stat="identity", geom_params = list(color='red'))
 print(p)
-
 ```
+
+![plot of chunk dailyactvity](figure/dailyactvity.png) 
 On average, maximum mean number of steps occurs at:
 
-``` {r, echo=TRUE}
+
+```r
 # Find index on interval axis has the max mean number of steps
 index <- which.max(activitydata$mean)
 activitydata$interval[index]
+```
 
+```
+## [1] 835
 ```
 
 ## Imputing missing values
 
 Total number of missing data:
 
-``` {r totalNA, echo=TRUE} 
+
+```r
 sum(!complete.cases(fitdata))
 ```
-Replace missing values with its corresponding interval mean number of steps taken, 
-then compare changes to previous calculated results.
-
-``` {r meanReplacement, echo = TRUE}
-
-
 
 ```
-
-
+## [1] 2304
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r weekendWeekday, echo=TRUE}
-library(lubridate)
-
+```r
 
 ```
 
