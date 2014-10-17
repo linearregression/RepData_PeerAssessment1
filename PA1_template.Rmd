@@ -95,6 +95,8 @@ then compare changes to previous calculated results.
 
 ``` {r meanReplacement, echo = TRUE}
 
+nodata <- complete.cases(fitdata)
+
 
 
 ```
@@ -108,6 +110,7 @@ library(lubridate)
 Sys.setlocale("LC_TIME", "English")
 fitdata<-na.omit(fitdata)
 #Index of rows with weekdays and weekendsrespectively
+
 weekdays <- fitdata$date == 'Saturday' | fitdata$date == 'Sunday'
 weekends <- 
 
