@@ -23,7 +23,7 @@ if(!file.exists("./activity.csv")) {
 ## Loading and preprocessing the data
 Load data from csv
 ```{r loaddata, echo=TRUE}
-Sys.setlocale(locale = "C")
+Sys.setlocale("LC_TIME", "English")
 fitdata<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
 
 ```
@@ -105,7 +105,10 @@ then compare changes to previous calculated results.
 
 ```{r weekendWeekday, echo=TRUE}
 library(lubridate)
-
+Sys.setlocale("LC_TIME", "English")
+activitydata <- ddply(na.omit(fitdata),c('interval', 'date'), summarise, mean=mean(steps))
+weekdays <- weekday
+weekends <- 
 
 ```
 
