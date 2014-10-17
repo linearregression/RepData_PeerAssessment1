@@ -106,9 +106,14 @@ then compare changes to previous calculated results.
 ```{r weekendWeekday, echo=TRUE}
 library(lubridate)
 Sys.setlocale("LC_TIME", "English")
-activitydata <- ddply(na.omit(fitdata),c('interval', 'date'), summarise, mean=mean(steps))
-weekdays <- weekday
+fitdata<-na.omit(fitdata)
+#Index of rows with weekdays and weekendsrespectively
+weekdays <- fitdata$date == 'Saturday' | fitdata$date == 'Sunday'
 weekends <- 
+
+weekdaydata <- ddply(weekdays,c('interval', 'date'), summarise, mean=mean(steps))
+weekenddata <- ddply(weekend,c('interval', 'date'), summarise, mean=mean(steps))
+
 
 ```
 
