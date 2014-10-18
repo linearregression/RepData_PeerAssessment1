@@ -53,12 +53,12 @@ print(p2)
 ```
  - Mean number of steps taken per day:
 ``` {r eval=T, echo=T}
-mean(sumfitdata$stepssum)
+oldmean <- mean(sumfitdata$stepssum)
 ```   
  - Median number of steps taken per day:
 
 ``` {r eval=T, echo=T}
-median(sumfitdata$stepssum)
+oldmedian <- median(sumfitdata$stepssum)
 ```
 
 ## What is the average daily activity pattern
@@ -103,21 +103,28 @@ Total number of missing data:
 ``` {r totalNA, echo=TRUE} 
 sum(!complete.cases(fitdata))
 ```
-Replace missing values with mean number of steps taken, 
-then compare changes to previous calculated results.
+Strategy to replace missing data. 
+Try out replace missing data with mean and median per corresponding interval, then compare changes.
 
 ``` {r meanReplacement, echo = TRUE}
 fitdata2<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
-nodata <- which(!complete.cases(fitdata2))
-activitydata
+# Calculate mean and median number of steps per interval
 
-fitdata2$steps[nodata] <- mean(sumfitdata$stepssum)
-stepsFreq <- aggregate(fitdata2$steps, by=list(fitdata2$date), sum, na.rm=TRUE)
-colnames(stepsFreq) <- c('date','sum')
-hist(stepsFreq$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps with Missing Value as Mean', col='cyan')
+stepmeanbyinterval<- aggregate(steps~interval, data=fitdata2,FUN=mean)
+stepsmedianbyinterval <- aggregate(steps~interval, data=fitdata2,FUN=median)
+# Replace NA data with mean
+fitdata2ByMean <- fitdata2 %>% group_by(interval) %>% mutate(steps= replace(steps, is.na(steps), mean(steps, na.rm=TRUE)))
+fitdata2ByMedian <- fitdata2 %>% group_by(interval) %>% mutate(steps= replace(steps, is.na(steps), median(steps, na.rm=TRUE)))
 
-mean(stepsFreq$sum)
-median(stepsFreq$sum)
+stepsFreqByMean <- aggregate(fitdata2ByMean$steps, by=list(fitdata2ByMean$date), sum, na.rm=TRUE)
+colnames(stepsFreqByMean) <- c('date','sum')
+hist(stepsFreqByMean$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps with Missing Value as Mean', col='red')
+
+newmean <- mean(stepsFreqByMean$sum)
+newmedian <- median(stepsFreqByMean$sum)
+#Difference vs data ignoring NA
+newmean - oldmean
+newmedian - oldmedian
 
 ```
 Effect no much difference.
