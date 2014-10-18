@@ -53,13 +53,13 @@ print(p2)
 ```
  - Mean number of steps taken per day:
 ``` {r eval=T, echo=T}
-oldmean <- mean(sumfitdata$stepssum)
+oldmean <- mean(stepsFreq$sum)
 oldmean
 ```   
  - Median number of steps taken per day:
 
 ``` {r eval=T, echo=T}
-oldmedian <- median(sumfitdata$stepssum)
+oldmedian <- median(stepsFreq$sum)
 oldmedian
 ```
 
@@ -142,7 +142,9 @@ medianbymedian - oldmedian
 
 
 ```
-Effect no much difference.
+Note that using Replacement by mean strategy does not sway the result that much
+Replacement by median does because it is grouped by interval across all days, thus 
+ignoring the context of activity for that day.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?

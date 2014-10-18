@@ -265,22 +265,22 @@ print(p2)
 <li>Mean number of steps taken per day:</li>
 </ul>
 
-<pre><code class="r">oldmean &lt;- mean(sumfitdata$stepssum)
+<pre><code class="r">oldmean &lt;- mean(stepsFreq$sum)
 oldmean
 </code></pre>
 
-<pre><code>## [1] 9354
+<pre><code>## [1] 10766
 </code></pre>
 
 <ul>
 <li>Median number of steps taken per day:</li>
 </ul>
 
-<pre><code class="r">oldmedian &lt;- median(sumfitdata$stepssum)
+<pre><code class="r">oldmedian &lt;- median(stepsFreq$sum)
 oldmedian
 </code></pre>
 
-<pre><code>## [1] 10395
+<pre><code>## [1] 10765
 </code></pre>
 
 <h2>What is the average daily activity pattern</h2>
@@ -358,13 +358,13 @@ medianbymean &lt;- median(stepsFreqByMean$sum)
 meanbymean - oldmean
 </code></pre>
 
-<pre><code>## [1] 1412
+<pre><code>## [1] 0
 </code></pre>
 
 <pre><code class="r">medianbymean - oldmedian
 </code></pre>
 
-<pre><code>## [1] 371.2
+<pre><code>## [1] 1.189
 </code></pre>
 
 <pre><code class="r">#Try this again with Replacemen with Median per that interval
@@ -382,13 +382,13 @@ medianbymedian &lt;- median(stepsFreqByMedian$sum)
 meanbymedian - oldmean
 </code></pre>
 
-<pre><code>## [1] 149.6
+<pre><code>## [1] -1262
 </code></pre>
 
 <pre><code class="r">medianbymedian - oldmedian
 </code></pre>
 
-<pre><code>## [1] 0
+<pre><code>## [1] -370
 </code></pre>
 
 <p>Effect no much difference.</p>

@@ -71,23 +71,23 @@ print(p2)
  - Mean number of steps taken per day:
 
 ```r
-oldmean <- mean(sumfitdata$stepssum)
+oldmean <- mean(stepsFreq$sum)
 oldmean
 ```
 
 ```
-## [1] 9354
+## [1] 10766
 ```
  - Median number of steps taken per day:
 
 
 ```r
-oldmedian <- median(sumfitdata$stepssum)
+oldmedian <- median(stepsFreq$sum)
 oldmedian
 ```
 
 ```
-## [1] 10395
+## [1] 10765
 ```
 
 ## What is the average daily activity pattern
@@ -179,7 +179,7 @@ meanbymean - oldmean
 ```
 
 ```
-## [1] 1412
+## [1] 0
 ```
 
 ```r
@@ -187,7 +187,7 @@ medianbymean - oldmedian
 ```
 
 ```
-## [1] 371.2
+## [1] 1.189
 ```
 
 ```r
@@ -208,7 +208,7 @@ meanbymedian - oldmean
 ```
 
 ```
-## [1] 149.6
+## [1] -1262
 ```
 
 ```r
@@ -216,7 +216,7 @@ medianbymedian - oldmedian
 ```
 
 ```
-## [1] 0
+## [1] -370
 ```
 Effect no much difference.
 
