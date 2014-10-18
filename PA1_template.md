@@ -191,7 +191,7 @@ medianbymean - oldmedian
 ```
 
 ```r
-#Try this again with Replacemen with Median per that interval
+#Try this again with Replacement with Median per that interval
 fitdata2ByMedian <- fitdata2 %>% group_by(interval) %>% mutate(steps= replace(steps, is.na(steps), median(steps, na.rm=TRUE)))
 stepsFreqByMedian <- aggregate(fitdata2ByMedian$steps, by=list(fitdata2ByMedian$date), sum, na.rm=TRUE)
 colnames(stepsFreqByMedian) <- c('date','sum')
@@ -218,14 +218,20 @@ medianbymedian - oldmedian
 ```
 ## [1] -370
 ```
-Effect no much difference.
+Note that using Replacement by mean strategy does not sway the result that much.
+
+Replacement by median does as you notice most of day is idle except bursts of activity.
+So expectation is both lower mean and median.
+Replacement by mean assumes 'idle time' during the day is same as daily mean. 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 
 ```r
-library(lubridate)
+library(plyr)
+library(lattice)
+
 Sys.setlocale("LC_TIME", "English")
 ```
 
@@ -239,66 +245,18 @@ Sys.setlocale("LC_TIME", "English")
 
 ```r
 fitdata<-na.omit(fitdata)
-#Index of rows with weekdays and weekendsrespectively
+# Add Weekday Factor variable of .
+#Index of rows with weekdays and weekends respectively
 fitdays <- weekdays(as.Date(fitdata$date))
 weekdays <- (fitdays == 'Saturday') | (fitdays == 'Sunday')
-weekends <- !weekdays
+fitdata$isWeekday <- as.factor(ifelse(weekdays, 'weekend', 'weekdays'))
+fitdata <- group_by(fitdata, isWeekday)
+activitydata <- ddply(fitdata,c('interval','isWeekday'), summarise, 
+     mean=mean(steps, na.rm=TRUE))
 
-weekdaydata <- ddply(weekdays,c('interval', 'date'), summarise, mean=mean(steps))
-```
-
-```
-## Error: missing value where TRUE/FALSE needed
-```
-
-```r
-weekenddata <- ddply(weekend,c('interval', 'date'), summarise, mean=mean(steps))
+xyplot(mean ~ interval| isWeekday, data =activitydata, type = "l", layout = c(1, 2),
+    xlab = "Interval", ylab = "Number of steps", horizontal=FALSE)
 ```
 
-```
-## Error: object 'weekend' not found
-```
-
-```r
-data2.weekday <- data2[data2$weekday == "weekday", ]
-```
-
-```
-## Error: object 'data2' not found
-```
-
-```r
-data2.weekend <- data2[data2$weekday == "weekend", ]
-```
-
-```
-## Error: object 'data2' not found
-```
-
-```r
-par(mfrow=c(2,1))
-plot(x=timeHM_formatter(ActivityByInterval.weekday$Hour_Minute),
-     y=ActivityByInterval.weekday$Avg_Steps, 
-     type="l", 
-     main="Weekday Activities", 
-     xlab="5 Minute Daily Intervals", ylab="Mean Steps", 
-     ylim=c(0,250))
-```
-
-```
-## Error: could not find function "timeHM_formatter"
-```
-
-```r
-plot(x=timeHM_formatter(ActivityByInterval.weekend$Hour_Minute),
-     y=ActivityByInterval.weekend$Avg_Steps, 
-     type="l",
-     main="Weekend Activites", 
-     xlab="5 Minute Daily Intervals", ylab="Mean Steps",
-     ylim=c(0,250))
-```
-
-```
-## Error: could not find function "timeHM_formatter"
-```
+![plot of chunk weekendWeekday](figure/weekendWeekday.png) 
 
