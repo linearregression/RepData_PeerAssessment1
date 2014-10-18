@@ -105,6 +105,7 @@ sum(!complete.cases(fitdata))
 ```
 Strategy to replace missing data. 
 Try out replace missing data with mean and median per corresponding interval, then compare changes.
+Since mean is senstive to extreme values, try out median.
 
 ``` {r meanReplacement, echo = TRUE}
 fitdata2<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
@@ -114,17 +115,29 @@ stepmeanbyinterval<- aggregate(steps~interval, data=fitdata2,FUN=mean)
 stepsmedianbyinterval <- aggregate(steps~interval, data=fitdata2,FUN=median)
 # Replace NA data with mean
 fitdata2ByMean <- fitdata2 %>% group_by(interval) %>% mutate(steps= replace(steps, is.na(steps), mean(steps, na.rm=TRUE)))
-fitdata2ByMedian <- fitdata2 %>% group_by(interval) %>% mutate(steps= replace(steps, is.na(steps), median(steps, na.rm=TRUE)))
 
 stepsFreqByMean <- aggregate(fitdata2ByMean$steps, by=list(fitdata2ByMean$date), sum, na.rm=TRUE)
 colnames(stepsFreqByMean) <- c('date','sum')
-hist(stepsFreqByMean$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps with Missing Value as Mean', col='red')
+hist(stepsFreqByMean$sum, xlab='Daily Steps taken', ylab='Occurence', main='Replacement of Missing Value as Mean', col='red')
 
-newmean <- mean(stepsFreqByMean$sum)
-newmedian <- median(stepsFreqByMean$sum)
+meanbymean <- mean(stepsFreqByMean$sum)
+medianbymean <- median(stepsFreqByMean$sum)
 #Difference vs data ignoring NA
-newmean - oldmean
-newmedian - oldmedian
+meanbymean - oldmean
+medianbymean - oldmedian
+
+#Try this again with Replacemen with Median per that interval
+fitdata2ByMedian <- fitdata2 %>% group_by(interval) %>% mutate(steps= replace(steps, is.na(steps), median(steps, na.rm=TRUE)))
+stepsFreqByMedian <- aggregate(fitdata2ByMedian$steps, by=list(fitdata2ByMedian$date), sum, na.rm=TRUE)
+colnames(stepsFreqByMedian) <- c('date','sum')
+hist(stepsFreqByMedian$sum, xlab='Daily Steps taken', ylab='Occurence', main='Replacement of Missing Value as Median', col='yellow')
+
+meanbymedian <-mean(stepsFreqByMedian$sum)
+medianbymedian <- median(stepsFreqByMedian$sum)
+#Difference vs data ignoring NA
+meanbymedian - oldmean
+medianbymedian - oldmedian
+
 
 ```
 Effect no much difference.
