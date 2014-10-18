@@ -37,7 +37,7 @@ colnames(stepsFreq) <- c('date','sum')
 hist(stepsFreq$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps', col='cyan')
 
 ```
-In additinal to the histogram above, group steps by date. Missing data dropped.
+In additional to the histogram above, group steps by date to vizualize pattern by date. Missing data dropped.
 ``` {r stepsum, fig.width=4, fig.eight=3, message=FALSE, echo=TRUE, results='hide'}
 library(plyr)
 library(dplyr)
@@ -51,7 +51,7 @@ p <- ggplot(data = sumfitdata, mapping = aes(x=date, y=stepssum)) +
 p2 <- p +layer(geom = 'histogram', geom_params = list(fill='green',color = 'steelblue'), stat = 'identity', stat_params = list(binwidth=5))
 print(p2)
 ```
- - Mean nubmer of steps taken per day:
+ - Mean number of steps taken per day:
 ``` {r eval=T, echo=T}
 mean(sumfitdata$stepssum)
 ```   
@@ -82,13 +82,19 @@ p <- p+layer(geom="line", stat="identity", geom_params = list(color='red'))
 print(p)
 
 ```
+
 Interval where Max Mean happens and the corresponding max mean:
 
 ``` {r, echo=TRUE}
 # Find index on interval axis has the max mean number of steps
-activitydata[which.max(activitydata$mean),]
+index<- which.max(activitydata$mean)
+# Interval
+activitydata$interval[index]
+# Max Mean Steps
+activitydata$mean[index]
 
 ```
+
 
 ## Imputing missing values
 
@@ -103,6 +109,8 @@ then compare changes to previous calculated results.
 ``` {r meanReplacement, echo = TRUE}
 fitdata2<- read.csv(file='activity.csv', header=TRUE, stringsAsFactor=FALSE, na.strings = "NA", colClasses=c("integer", "Date", "integer"))
 nodata <- which(!complete.cases(fitdata2))
+activitydata
+
 fitdata2$steps[nodata] <- mean(sumfitdata$stepssum)
 stepsFreq <- aggregate(fitdata2$steps, by=list(fitdata2$date), sum, na.rm=TRUE)
 colnames(stepsFreq) <- c('date','sum')
