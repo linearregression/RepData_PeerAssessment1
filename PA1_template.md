@@ -255,8 +255,31 @@ activitydata <- ddply(fitdata,c('interval','isWeekday'), summarise,
      mean=mean(steps, na.rm=TRUE))
 
 xyplot(mean ~ interval| isWeekday, data =activitydata, type = "l", layout = c(1, 2),
-    xlab = "Interval", ylab = "Number of steps", horizontal=FALSE)
+    xlab = "Interval", ylab = "Mean Number of steps Per Interval", horizontal=FALSE)
 ```
 
 ![plot of chunk weekendWeekday](figure/weekendWeekday.png) 
+
+Both mean and median are different on weekdays vs weekends.
+
+
+```r
+rr <- ddply(fitdata, .(isWeekday, steps, interval), summarise, mean=mean(steps, na.rm=TRUE))
+meanwkend <- mean(rr$steps[rr$isWeekday=='weekend'], na.rm=TRUE)
+meanwkday <- mean(rr$steps[rr$isWeekday=='weekdays'], na.rm=TRUE)
+
+medianwkend <- median(rr$steps[rr$isWeekday=='weekend'], na.rm=TRUE)
+medianwkday <- median(rr$steps[rr$isWeekday=='weekdays'], na.rm=TRUE)
+
+data.frame(day=c('weekday', 'weekend'), 
+           mean=c(meanwkday, meanwkend),
+           median=c(medianwkday, medianwkend))
+```
+
+```
+##       day  mean median
+## 1 weekday 125.7     49
+## 2 weekend 110.9     44
+```
+
 
