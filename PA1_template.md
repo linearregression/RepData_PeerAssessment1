@@ -45,7 +45,7 @@ Frequency distribution of daily total of steps taken. Missing data dropped.
 
 
 ```r
-stepsFreq <- aggregate(fitdata$steps, by=list(fitdata$date), sum, na.rm=TRUE)
+stepsFreq <- aggregate(steps~date, data=fitdata, sum, na.rm=TRUE)
 colnames(stepsFreq) <- c('date','sum')
 hist(stepsFreq$sum, xlab='Daily Steps taken', ylab='Occurence', main='Frequency distribution of daily total number of steps', col='cyan')
 ```
@@ -72,12 +72,22 @@ print(p2)
 
 ```r
 oldmean <- mean(sumfitdata$stepssum)
+oldmean
+```
+
+```
+## [1] 9354
 ```
  - Median number of steps taken per day:
 
 
 ```r
 oldmedian <- median(sumfitdata$stepssum)
+oldmedian
+```
+
+```
+## [1] 10395
 ```
 
 ## What is the average daily activity pattern
