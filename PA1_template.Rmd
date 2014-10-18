@@ -128,7 +128,7 @@ medianbymean <- median(stepsFreqByMean$sum)
 meanbymean - oldmean
 medianbymean - oldmedian
 
-#Try this again with Replacemen with Median per that interval
+#Try this again with Replacement with Median per that interval
 fitdata2ByMedian <- fitdata2 %>% group_by(interval) %>% mutate(steps= replace(steps, is.na(steps), median(steps, na.rm=TRUE)))
 stepsFreqByMedian <- aggregate(fitdata2ByMedian$steps, by=list(fitdata2ByMedian$date), sum, na.rm=TRUE)
 colnames(stepsFreqByMedian) <- c('date','sum')
